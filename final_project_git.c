@@ -34,18 +34,12 @@ void count_the_blinks(int r,int g,int b,int count)
 {
     int i;
     //Blink white three times in between counts
-    set_color(RGB(1, 1, 1)); // White
-    delay(100);
-    set_color(RGB(0, 0, 0)); // Off
-    delay(100);
-    set_color(RGB(1, 1, 1)); // White
-    delay(100);
-    set_color(RGB(0, 0, 0)); //Off
-    delay(100);
-    set_color(RGB(1, 1, 1)); // White
-    delay(100);
-    
-    // Blink
+    for (i = 0; i < 3; i++)
+    {
+        set_color(RGB(1, 1, 1)); // White
+        delay(100);
+    }
+    // Blink specific colours
     for(i = 0; i < count; i++)
     {
         set_color(RGB(r, g, b));
@@ -141,28 +135,31 @@ void gradient_adaptive()
 }
 
 
-void selective_listening__to_first_kilobot_from_origin()
+void selective_listening__to_first_kilobot_from_origin() // this is working
 {   if (kilo_uid == ORIGIN_KILOBOT)
     {
         if (new_message == 1  && id_received ==  FIRST_KILOBOT)
         {
-            // Reset the flag so the LED is only blinked once per message.
-            new_message = 0;
-            //
-            distance_to_light(distance);    
+            new_message = 0; // Reset the flag 
+            //distance_to_light(distance);
+            set_color(RGB(1, 0, 0)); // Red
         }
+        else if (new_message == 1 && id_received == SECOND_KILOBOT)
+        {
+            new_message = 0; // Reset the flag
+            set_color(RGB(1, 1, 0)); // Yellow
+        }
+        
     }
 }
 
 void selective_listening__to_second_kilobot_from_origin()
 {   if (kilo_uid == ORIGIN_KILOBOT)
     {
-        if (new_message == 1  && kilo_uid ==  SECOND_KILOBOT)
+        if (new_message == 1  && id_received ==  SECOND_KILOBOT)
         {
-            // Reset the flag so the LED is only blinked once per message.
-            new_message = 0;
-            //
-            distance_to_light(distance);    
+            new_message = 0; // Reset the flag 
+            //distance_to_light(distance);  
         }
     }
 }
@@ -170,12 +167,10 @@ void selective_listening__to_second_kilobot_from_origin()
 void selective_listening__to_third_kilobot_from_second()
 {   if (kilo_uid == SECOND_KILOBOT)
     {
-        if (new_message == 1  && kilo_uid ==  THIRD_KILOBOT)
+        if (new_message == 1  && id_received ==  THIRD_KILOBOT)
         {
-            // Reset the flag so the LED is only blinked once per message.
-            new_message = 0;
-            //
-            distance_to_light(distance);    
+            new_message = 0;// Reset the flag 
+            //distance_to_light(distance);  
         }
     }
 }
