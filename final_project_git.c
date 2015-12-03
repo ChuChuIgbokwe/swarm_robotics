@@ -2,13 +2,12 @@
 #include <math.h>
 
 #define UID 0
-#define DISTANCE 1
-#define X_COORD 2
-#define Y_COORD 3
-#define DEDX 4
-#define DEDY 5
-#define DELTAX 6
-#define DELTAY 7
+#define DISTANCE_64_32 1
+#define DISTANCE_96_32 2
+#define DISTANCE_96_64 3
+#define X_COORD 5
+#define Y_COORD 6
+
 #define HOP_COUNT 8
 
 //KILOBOT UNIQUE ID'S
@@ -23,18 +22,24 @@
 int new_message = 0;    // Flag to keep track of new messages.
 int own_gradient = GRADIENT_MAX;
 int id_received = 0;        //used to track the UID of a kilobot sending a message
-int distance_received = 0;  //used to track of how far away a robot
+int distance_primary = 0;  //used to track of how far away a robot
+int distance_secondary = 0;
+int distance_tertiary = 0
 int x_coordinate = 0;
 int y_coordinate = 0;
 
 
 int distance;
-int distance_64_32;     //distance of 64 from 32
-int distance_96_32;     //distance of 96 from 32
-int distance_96_64;  //distance of 96 from 64 
+int distance_64_32 = 0;     //distance of 64 from 32
+int distance_96_32 = 0;     //distance of 96 from 32
+int distance_96_64 = 0;  //distance of 96 from 64 
 
 int received_gradient = 0;
 float alpha = 0.2;  //0 < alpha << 1
+
+
+//At the top of the file, declare a "flag" for when a message is sent
+int message_sent = 0;
 
 
 uint32_t last_gradient_anchored;
