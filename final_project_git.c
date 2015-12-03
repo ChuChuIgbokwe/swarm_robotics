@@ -19,12 +19,23 @@
 #define GRADIENT_MAX 255
 
 
+
 int new_message = 0;    // Flag to keep track of new messages.
-int distance;
 int own_gradient = GRADIENT_MAX;
+int id_received = 0;        //used to track the UID of a kilobot sending a message
+int distance_received = 0;  //used to track of how far away a robot
+int x_coord = 0;
+int y_coord = 0;
+
+
+int distance;
+int distance_64;     //distance of 64 from 32
+int distance_96;     //distance of 96 from 32
+int distance_64_96;  //distance of 96 from 64 
+
 int received_gradient = 0;
 float alpha = 0.2;  //0 < alpha << 1
-int id_received = 0;
+
 
 uint32_t last_gradient_anchored;
 message_t message;
@@ -220,6 +231,7 @@ void message_rx(message_t *m, distance_measurement_t *d)
         new_message = 1; // Set the flag on message reception.
         received_gradient = m->data[HOP_COUNT];
         id_received =  m->data[UID];
+        distance_received = m->data[DISTANCE];
     }
     
 }
