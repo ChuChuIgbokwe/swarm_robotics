@@ -24,7 +24,7 @@ int own_gradient = GRADIENT_MAX;
 int id_received = 0;        //used to track the UID of a kilobot sending a message
 int distance_primary = 0;  //used to track of how far away a robot
 int distance_secondary = 0;
-int distance_tertiary = 0
+int distance_tertiary = 0;
 int x_coordinate = 0;
 int y_coordinate = 0;
 
@@ -221,32 +221,36 @@ void selective_listening_to_first_kilobot_from_origin()
             message.crc = message_crc(&message); // Update the transmission message whenever the gradient changes.
 
         }
+    }
+}
+
 
 
 void selective_listening_to_second_kilobot_from_origin_and_first_kilobot()
 {
-    if(message_sent){
+    if(message_sent)
+    {
         set_color(RGB(1, 1, 1)); // White
         delay(100);
         set_color(RGB(0, 0, 0));
         message_sent = 0;
     }
     if (new_message == 1 && id_received == ORIGIN_KILOBOT)
-        {
-            //new_message = 0; // Reset the flag
-            set_color(RGB(1, 1, 0)); // Yellow
-            distance_96_32 = distance;
-            message.data[DISTANCE_96_32] = distance_96_32;
-        }
+    {
+        //new_message = 0; // Reset the flag
+        set_color(RGB(1, 1, 0)); // Yellow
+        distance_96_32 = distance;
+        message.data[DISTANCE_96_32] = distance_96_32;
+    }
     else if (new_message == 1 && id_received == SECOND_KILOBOT)
     {
         // Update the message
-            distance_96_64 = distance;
-            message.data[DISTANCE_96_64] = distance_96_64;
-            
-            distance_64_32 = m->data[DISTANCE_64_32];
-            message.data[D_O_X_INDEX] = distance_64_32;
-            set_color(RGB(0, 1, 0)); // Green
+        distance_96_64 = distance;
+        message.data[DISTANCE_96_64] = distance_96_64;
+        
+        distance_64_32 = distance_primary;
+        message.data[DISTANCE_64_32] = distance_64_32;
+        set_color(RGB(0, 1, 0)); // Green
     }
 }
 
@@ -285,19 +289,18 @@ message_t *message_tx()
 
 void message_rx(message_t *m, distance_measurement_t *d)
 {
-    // Set the flag on message reception.
-    //new_message = 1;
-    distance = estimate_distance(d);
-    
-     // Only process this message if the previous one has been processed.
+    // Only process this message if the previous one has been processed.
     if (new_message == 0)
     {
-        new_message = 1; // Set the flag on message reception.
-        received_gradient = m->data[HOP_COUNT];
+        new_message = 1;
+        distance = estimate_distance(d);
+        received_gradient = m->data[0];
+        
         id_received =  m->data[UID];
-        distance_received = m->data[DISTANCE];
+        distance_primary = m->data[DISTANCE_64_32];
+        distance_secondary = m->data[DISTANCE_96_32];
+        distance_tertiary = m->data[DISTANCE_96_64];
     }
-    
 }
 
 
@@ -338,14 +341,21 @@ void loop()
    
     //gradient_adaptive();    // Encapsulation works :)
     //selective_listening__to_first_kilobot_from_origin();
-    selective_listening_to_second_kilobot_from_origin_and_first_kilobot()
+    selective_listening_to_second_kilobot_from_origin_and_first_kilobot();
 }
+
+
+void message_tx_success() {
+   message_sent = 1;
+}
+
 
 int main()
 {
     kilo_init();                    // initialize hardware
     kilo_message_rx = message_rx;   // Register the message_tx callback function.
     kilo_message_tx = message_tx;   // Register the message_tx_success callback function.
+    kilo_message_tx_success = message_tx_success; // Register the message_tx_success callback function.
     kilo_start(setup, loop);        // start program
     
     return 0;
