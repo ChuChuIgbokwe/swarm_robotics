@@ -24,14 +24,14 @@ int new_message = 0;    // Flag to keep track of new messages.
 int own_gradient = GRADIENT_MAX;
 int id_received = 0;        //used to track the UID of a kilobot sending a message
 int distance_received = 0;  //used to track of how far away a robot
-int x_coord = 0;
-int y_coord = 0;
+int x_coordinate = 0;
+int y_coordinate = 0;
 
 
 int distance;
-int distance_64;     //distance of 64 from 32
-int distance_96;     //distance of 96 from 32
-int distance_64_96;  //distance of 96 from 64 
+int distance_64_32;     //distance of 64 from 32
+int distance_96_32;     //distance of 96 from 32
+int distance_96_64;  //distance of 96 from 64 
 
 int received_gradient = 0;
 float alpha = 0.2;  //0 < alpha << 1
@@ -146,43 +146,102 @@ void gradient_adaptive()
 }
 
 
-void selective_listening__to_first_kilobot_from_origin() // this is working
-{   if (kilo_uid == ORIGIN_KILOBOT)
+// void selective_listening__to_first_kilobot_from_origin() // this is working
+// {   
+//     if (kilo_uid == ORIGIN_KILOBOT)
+//     {
+//         // if (new_message ==1)
+//         // {
+//         //     message.data[X_COORD] = 0;
+//         //     message.data[Y_COORD] = 1;
+//         // }
+//         if (new_message == 1  && id_received ==  FIRST_KILOBOT)
+//         {
+//             new_message = 0; // Reset the flag 
+//             //distance_to_light(distance);
+//             set_color(RGB(1, 0, 0)); // Red
+//             distance_64 = distance;
+//             message.data[X_COORD] = distance_64;
+//             message.data[Y_COORD] = 0;
+
+//         }
+//         else if (new_message == 1 && id_received == SECOND_KILOBOT)
+//         {
+//             new_message = 0; // Reset the flag
+//             set_color(RGB(1, 1, 0)); // Yellow
+//             distance_64 = distance;
+//             message.data[X_COORD] = ;
+//             message.data[Y_COORD] = ;
+//         }
+        
+//     }
+// }
+
+
+// void selective_listening__to_third_kilobot_from_second()
+// {   if (kilo_uid == SECOND_KILOBOT)
+//     {
+//         if (new_message == 1  && id_received ==  THIRD_KILOBOT)
+//         {
+//             new_message = 0;// Reset the flag 
+//             //distance_to_light(distance);  
+//         }
+//     }
+// }
+
+
+void selective_listening_to_first_kilobot_from_origin() 
+{   
+    if(message_sent){
+        set_color(RGB(1, 0, 1));// Magenta
+        delay(100);
+        set_color(RGB(0, 0, 0));
+        message_sent = 0;
+    }
+
+    if (kilo_uid == ORIGIN_KILOBOT)
     {
         if (new_message == 1  && id_received ==  FIRST_KILOBOT)
         {
-            new_message = 0; // Reset the flag 
+            //new_message = 0; // Reset the flag 
             //distance_to_light(distance);
             set_color(RGB(1, 0, 0)); // Red
+            distance_64_32 = distance;
+            x_coordinate = distance; 
+            y_coordinate = 0;
+
+            message.data[X_COORD] = x_coordinate;
+            message.data[Y_COORD] = y_coordinate;
+            message.data[DISTANCE_64_32] = distance_64_32;
+            message.crc = message_crc(&message); // Update the transmission message whenever the gradient changes.
+
         }
-        else if (new_message == 1 && id_received == SECOND_KILOBOT)
+
+
+void selective_listening_to_second_kilobot_from_origin_and_first_kilobot()
+{
+    if(message_sent){
+        set_color(RGB(1, 1, 1)); // White
+        delay(100);
+        set_color(RGB(0, 0, 0));
+        message_sent = 0;
+    }
+    if (new_message == 1 && id_received == ORIGIN_KILOBOT)
         {
-            new_message = 0; // Reset the flag
+            //new_message = 0; // Reset the flag
             set_color(RGB(1, 1, 0)); // Yellow
+            distance_96_32 = distance;
+            message.data[DISTANCE_96_32] = distance_96_32;
         }
-        
-    }
-}
-
-void selective_listening__to_second_kilobot_from_origin()
-{   if (kilo_uid == ORIGIN_KILOBOT)
+    else if (new_message == 1 && id_received == SECOND_KILOBOT)
     {
-        if (new_message == 1  && id_received ==  SECOND_KILOBOT)
-        {
-            new_message = 0; // Reset the flag 
-            //distance_to_light(distance);  
-        }
-    }
-}
-
-void selective_listening__to_third_kilobot_from_second()
-{   if (kilo_uid == SECOND_KILOBOT)
-    {
-        if (new_message == 1  && id_received ==  THIRD_KILOBOT)
-        {
-            new_message = 0;// Reset the flag 
-            //distance_to_light(distance);  
-        }
+        // Update the message
+            distance_96_64 = distance;
+            message.data[DISTANCE_96_64] = distance_96_64;
+            
+            distance_64_32 = m->data[DISTANCE_64_32];
+            message.data[D_O_X_INDEX] = distance_64_32;
+            set_color(RGB(0, 1, 0)); // Green
     }
 }
 
@@ -273,7 +332,8 @@ void loop()
      // Only pay attention to messages if this robot is not the seed.
    
     //gradient_adaptive();    // Encapsulation works :)
-    selective_listening__to_first_kilobot_from_origin();
+    //selective_listening__to_first_kilobot_from_origin();
+    selective_listening_to_second_kilobot_from_origin_and_first_kilobot()
 }
 
 int main()
