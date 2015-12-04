@@ -227,32 +227,80 @@ void selective_listening_to_first_kilobot_from_origin()
 
 
 void selective_listening_to_second_kilobot_from_origin_and_first_kilobot()
-{
+{   last_changed = kilo_ticks;
     if(message_sent)
     {
-        set_color(RGB(1, 1, 1)); // White
-        delay(100);
-        set_color(RGB(0, 0, 0));
+        // set_color(RGB(1, 1, 1)); // White
+        // delay(100);
+        // set_color(RGB(0, 0, 0));
         message_sent = 0;
-    }
-    if (new_message == 1 && id_received == ORIGIN_KILOBOT)
-    {
-        //new_message = 0; // Reset the flag
-        set_color(RGB(1, 1, 0)); // Yellow
-        distance_96_32 = distance;
-        message.data[DISTANCE_96_32] = distance_96_32;
-    }
-    else if (new_message == 1 && id_received == SECOND_KILOBOT)
-    {
-        // Update the message
-        distance_96_64 = distance;
-        message.data[DISTANCE_96_64] = distance_96_64;
         
-        distance_64_32 = distance_primary;
-        message.data[DISTANCE_64_32] = distance_64_32;
-        set_color(RGB(0, 1, 0)); // Green
     }
-}
+    //if (new_message == 1 && id_received == ORIGIN_KILOBOT && kilo_uid == FIRST_KILOBOT)
+    if (new_message == 1 && kilo_uid == FIRST_KILOBOT)
+    {   
+        if (id_received == ORIGIN_KILOBOT)
+        {
+            new_message = 0; // Reset the flag
+            set_color(RGB(1, 1, 0)); // Yellow
+            delay(100);
+            set_color(RGB(0, 0, 0));
+        }
+        if (id_received == SECOND_KILOBOT)
+        {
+            new_message = 0; // Reset the flag
+            set_color(RGB(0, 1, 0)); // Green
+            delay(100);
+            set_color(RGB(0, 0, 0));
+        }
+        
+        // distance_96_32 = distance;
+        // message.data[DISTANCE_96_32] = distance_96_32;
+        // if (kilo_ticks > last_changed + 64)
+        // {
+        //  new_message = 2;
+        // }
+    }
+    //if (new_message == 1 && id_received == SECOND_KILOBOT && kilo_uid == ORIGIN_KILOBOT)
+    if (new_message == 1  && kilo_uid == ORIGIN_KILOBOT)
+    {   
+        if (id_received == SECOND_KILOBOT)
+        {
+            new_message = 0; // Reset the flag
+            set_color(RGB(1, 0, 0)); // Red
+            delay(100);
+            set_color(RGB(0, 0, 0));
+        }
+        if (id_received == FIRST_KILOBOT)
+        {
+            new_message = 0; // Reset the flag
+            set_color(RGB(0, 0, 1)); // Blue
+            delay(100);
+            set_color(RGB(0, 0, 0));
+        }
+        
+        // distance_96_64 = distance;
+        // // Update the message
+        // message.data[DISTANCE_96_64] = distance_96_64;
+        // distance_64_32 = distance_primary;
+        // message.data[DISTANCE_64_32] = distance_64_32;
+        
+        
+//         // if (kilo_ticks > last_changed + 64)
+//         // {
+//         //   new_message = 1;
+//         // }
+    }
+    
+    // if (new_message == 1 && id_received == FIRST_KILOBOT && kilo_uid == SECOND_KILOBOT)
+    // //if (new_message == 1  && kilo_uid == SECOND_KILOBOT)
+    // {
+    //     new_message = 0; // Reset the flag
+    //     set_color(RGB(1, 0, 0)); // Red
+    //     delay(100);
+    //     set_color(RGB(0, 0, 0));
+    // }
+ }
 
 
 void setup()
