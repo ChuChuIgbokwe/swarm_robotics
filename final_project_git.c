@@ -23,9 +23,7 @@
 int new_message = 0;            // Flag to keep track of new messages.
 int own_gradient = GRADIENT_MAX;
 int id_received = 0;            //used to track the UID of a kilobot sending a message
-// int distance_primary = 0;    //used to track of how far away a robot
-// int distance_secondary = 0;
-// int distance_tertiary = 0;
+
  
 int dji[NUMBEROFSENSORS];
 int dji_hat[NUMBEROFSENSORS]; 
@@ -35,7 +33,7 @@ int dEdx = 0;
 int dEdy = 0;
 
 int x_origin, y_origin, delta_x , delta_y;
-int x1, yy1, x2, y2, x_coord[2], y_coord[2];
+int x1, yy1, x2, y2, x_coord[2], y_coord[2]; // y1 is a built in function in one of the above libraries
 int x_0, y_0, x_1, y_1, x_2, y_2;
 
 //declare distances
@@ -158,6 +156,92 @@ void gradient_adaptive()
 }
 
 
+void blink_coordinates()
+{
+    int origin_x,origin_y, first_x, first_y, second_x, second_y;
+    int tens_x_origin, tens_y_origin, units_x_origin, units_y_origin;
+    
+    int tens_x_first, tens_y_first, units_x_first, units_y_first;
+    int tens_x_second, tens_y_second, units_x_second, units_y_second;
+
+    if (kilo_uid == ORIGIN_KILOBOT)
+    {
+        origin_x = x_0;
+        origin_y = y_0;
+        //tens
+        tens_x_origin = origin_x / 10;
+        tens_y_origin = origin_y / 10;
+        //units
+        units_x_origin = origin_x % 10;
+        units_y_origin = origin_y % 10;
+        //Blink x coordinates
+        count_the_blinks(1,0,0,tens_x_origin); //Red
+        count_the_blinks(0,0,1,units_x_origin); //Blue
+        // Blink green thrice
+        for (i = 0; i < 3; i++)
+        {
+        set_color(RGB(0, 1, 0)); // White
+        delay(100);
+        }
+        //Blink y coordinates
+        count_the_blinks(1,0,0,tens_y_origin); //Red
+        count_the_blinks(0,0,1,units_y_origin); //Blue
+
+
+    }
+
+    if (kilo_uid == FIRST_KILOBOT)
+    {
+        first_x = x_1;
+        first_y = y_1;
+        //tens
+        tens_x_first = first_x / 10;
+        tens_y_first = first_y / 10;
+        //units
+        units_x_first= first_x % 10;
+        units_y_first = first_y % 10;
+        //Blink x coordinates
+        count_the_blinks(1,0,0,tens_x_first); //Red
+        count_the_blinks(0,0,1,units_x_first); //Blue
+        // Blink green thrice
+        for (i = 0; i < 1; i++)
+        {
+        set_color(RGB(0, 1, 0)); // green
+        delay(100);
+        }
+        //Blink y coordinates
+        count_the_blinks(1,0,0,tens_y_first); //Red
+        count_the_blinks(0,0,1,units_y_first); //Blue
+
+
+    }
+ if (kilo_uid == SECOND_KILOBOT)
+    {
+        second_x = x_2;
+        second_y = y_2;
+        //tens
+        tens_x_second = second_x / 10;
+        tens_y_second = second_y / 10;
+        //units
+        units_x_second = second_x % 10;
+        units_y_second = second_y % 10;
+        //Blink x coordinates
+        count_the_blinks(1,0,0,tens_x_second); //Red
+        count_the_blinks(0,0,1,units_x_second); //Blue
+        // Blink green thrice
+        for (i = 0; i < 3; i++)
+        {
+        set_color(RGB(0, 1, 0)); // White
+        delay(100);
+        }
+        //Blink y coordinates
+        count_the_blinks(1,0,0,tens_y_second); //Red
+        count_the_blinks(0,0,1,units_y_second); //Blue
+    }
+
+}
+
+
 void three_way_selective_listening()
 {   
     if(message_sent)
@@ -185,14 +269,6 @@ void three_way_selective_listening()
                     distance_64_32 = distance;
                     dji_hat[0] = distance_64_32;    //store the distance in the array dji_hat
 
-                    // x_coordinate = distance;
-                    // y_coordinate = 0;
-                    // //Update the message
-                    // message.data[DISTANCE_64_32] = distance_64_32
-                    // message.data[X_COORD] = x_coordinate;
-                    // message.data[Y_COORD] = y_coordinate;
-                    // message.crc = message_crc(&message);
-
                 }
                 
                 
@@ -207,19 +283,9 @@ void three_way_selective_listening()
                     // delay(100);
                     // set_color(RGB(0, 0, 0));
                     distance_96_64 = distance;
-                    //dji_hat[2] = distance_96_64;
-                    // message.data[DISTANCE_96_64] = distance_96_64;
-                    // distance_64_32 = distance_primary;
-                    // message.data[DISTANCE_64_32] = distance_64_32;
                 }
             }
-            
-            // distance_96_32 = distance;
-            // message.data[DISTANCE_96_32] = distance_96_32;
-            // if (kilo_ticks > last_changed + 64)
-            // {
-            //  new_message = 2;
-            // }
+
         }
         //if (new_message == 1 && id_received == SECOND_KILOBOT && kilo_uid == ORIGIN_KILOBOT)
         if (kilo_uid == ORIGIN_KILOBOT)
@@ -290,8 +356,8 @@ lamda = sqrt(abs((d_96_32)^2 - (phi)^2)))
     message.data[X2] = x2;
     message.data[Y2] = y2;
     message.crc = message_crc(&message);
-    set_color(RGB(0, 0, 1)); // Blue
-
+    //set_color(RGB(0, 0, 1)); // Blue
+    blink_coordinates();
 
     }     
         
@@ -307,13 +373,7 @@ void setup()
         own_gradient = 0;
     }
     
-    // distance_64_32 = 0;     //distance of 64 from 32
-    // distance_96_32 = 0;     //distance of 96 from 32
-    // distance_96_64 = 0;  //distance of 96 from 64 
-    // x_coordinate = 0;
-    // y_coordinate = 0;
-    delta_x = 0;
-    delta_y =0;
+    
     /*Generate random coordinates for each kilobot. We're using a unit square of 10 cm by 10 cm.
     so the maximum coordinates a kilobot can have are (10,10).rand_soft is a uint8_t pseudo number generator.
     i.e it generates random numbers between 0-255 modulo 11 means we can have remainders of 10
@@ -326,20 +386,15 @@ void setup()
     y2 = rand_soft() % 11;
     x_coord[0] = x1;
     x_coord[1] = x2;
-    y_coord[0] = yy1,
+    y_coord[0] = yy1;
     y_coord[1] = y2;
+    delta_x = 0;
+    delta_y =0;
     
     // Set the transmission message. The type is always NORMAL
     message.type = NORMAL;
     
     message.data[UID] = kilo_uid;
-    // message.data[DISTANCE_64_32] = distance_64_32;
-    // message.data[DISTANCE_96_32] = distance_96_32;
-    // message.data[DISTANCE_96_64] = distance_96_64;
-    // message.data[X_COORD] = x_coordinate;
-    // message.data[Y_COORD] = y_coordinate;
-    // message.data[DELTA_X] = delta_x;
-    // message.data[DELTA_Y] = delta_y;
     message.data[X_ORIGIN] = x_origin;
     message.data[Y_ORIGIN] = y_origin;
     message.data[X1] = x1;
@@ -370,11 +425,8 @@ void message_rx(message_t *m, distance_measurement_t *d)
         received_gradient = m->data[0];
         
         id_received =  m->data[UID];
-        // distance_primary = m->data[DISTANCE_64_32];
-        // distance_secondary = m->data[DISTANCE_96_32];
-        // distance_tertiary = m->data[DISTANCE_96_64];
         x_0 = m->data[X_ORIGIN];
-        y_1 = m->data[Y_ORIGIN];
+        y_0 = m->data[Y_ORIGIN];
         x_1 = m->data[X1];
         y_1 = m->data[Y1];
         x_2 = m->data[X2];
