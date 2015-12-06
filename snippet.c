@@ -146,17 +146,13 @@ void selective_listening_to_second_kilobot_from_origin_and_first_kilobot()
         }
     else if (new_message == 1 && id_received == SECOND_KILOBOT)
     {
-    	// Update the fields regarding the a message from the x-axis
+    	// Update the message
 			distance_96_64 = distance;
 			message.data[DISTANCE_96_64] = distance_96_64;
 			
 			distance_64_32 = m->data[DISTANCE_64_32];
 			message.data[D_O_X_INDEX] = distance_64_32;
-			//blink_light(3, 0, 3, 1, 75);	// Purple
-			set_color(RGB(3, 0, 3));
-    }
-      
-
+			set_color(RGB(0, 1, 0)); // Green
     }
 }
 
