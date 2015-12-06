@@ -422,7 +422,7 @@ void message_rx(message_t *m, distance_measurement_t *d)
     {
         new_message = 1;
         distance = estimate_distance(d);
-        received_gradient = m->data[0];
+        
         
         id_received =  m->data[UID];
         x_0 = m->data[X_ORIGIN];
@@ -431,6 +431,7 @@ void message_rx(message_t *m, distance_measurement_t *d)
         y_1 = m->data[Y1];
         x_2 = m->data[X2];
         y_2 = m->data[Y2];
+        received_gradient = m->data[HOP_COUNT];
     }
 }
 
