@@ -39,7 +39,7 @@ int x_0, y_0, x_1, y_1, x_2, y_2;
 
 //declare distances
 int distance;
-int distance_current =0;
+int distance_current = 0;
 int distance_64_32;     // distance between kilobot 64 to kilobot 32
 int distance_96_32;     // distance between kilobot 96 to kilobot 32
 int distance_96_64;     // distance between kilobot 96 to kilobot 64 
@@ -167,8 +167,7 @@ void blink_coordinates(int origin_x, int origin_y, int first_x, int first_y, int
     int i;
     if (kilo_uid == ORIGIN_KILOBOT)
     {
-        // origin_x = x_0;
-        // origin_y = y_0;
+       
         //tens
         tens_x_origin = origin_x / 10;
         tens_y_origin = origin_y / 10;
@@ -207,15 +206,16 @@ void blink_coordinates(int origin_x, int origin_y, int first_x, int first_y, int
 
     if (kilo_uid == FIRST_KILOBOT)
     {
-        /*first_x = x_1;
-        first_y = y_1;*/
+        
         //tens
         tens_x_first = first_x / 10;
         tens_y_first = first_y / 10;
+        
         //units
         units_x_first= first_x % 10;
         units_y_first = first_y % 10;
-        //Blink x coordinates
+        /
+        /Blink x coordinates
         if (tens_x_first == 0)
         {count_the_blinks(1,1,0,1);}// blink yellow  
         else 
@@ -231,6 +231,7 @@ void blink_coordinates(int origin_x, int origin_y, int first_x, int first_y, int
         set_color(RGB(1, 1, 1)); // White
         delay(100);
         }
+        
         //Blink y coordinates
         if (tens_y_first == 0)
         {count_the_blinks(1,1,0,1);}// blink yellow}
@@ -244,15 +245,15 @@ void blink_coordinates(int origin_x, int origin_y, int first_x, int first_y, int
     }
  if (kilo_uid == SECOND_KILOBOT)
     {
-        // second_x = x_2;
-        // second_y = y_2;
-        
+       
         //tens
         tens_x_second = second_x / 10;
         tens_y_second = second_y / 10;
+        
         //units
         units_x_second = second_x % 10;
         units_y_second = second_y % 10;
+        
         //Blink x coordinates
         if (tens_x_second == 0)
         {count_the_blinks(1,1,0,1);}// blink yellow  
@@ -263,12 +264,13 @@ void blink_coordinates(int origin_x, int origin_y, int first_x, int first_y, int
         else
         {count_the_blinks(0,0,1,units_x_second);} //Blue
         
-           // Blink white thrice
+        // Blink white thrice
         for (i = 0; i < 3; i++)
         {
         set_color(RGB(1, 1, 1)); // White
         delay(100);
         }
+        
         //Blink y coordinates
         if (tens_y_second == 0)
         {count_the_blinks(1,1,0,1);}// blink yellow}
@@ -283,13 +285,13 @@ void blink_coordinates(int origin_x, int origin_y, int first_x, int first_y, int
 }
 
 
-    int distance_64_32_received = 0;
-    int distance_96_32_received = 0;
-    int distance_96_64_received = 0;
+int distance_64_32_received = 0;
+int distance_96_32_received = 0;
+int distance_96_64_received = 0;
 
-void three_way_selective_listening()
+int getting_dji_hat()
 {   
-    int i;
+    
     if(message_sent)
     {
         // set_color(RGB(1, 1, 1)); // White
@@ -297,191 +299,106 @@ void three_way_selective_listening()
         // set_color(RGB(0, 0, 0));
         message_sent = 0;
     }
-        
-    if (new_message == 1)
+    while(1)
     {
-        
-        // //if (new_message == 1 && id_received == ORIGIN_KILOBOT && kilo_uid == FIRST_KILOBOT)
-        // if (kilo_uid == FIRST_KILOBOT)
-        // {   
-        //     if (id_received == ORIGIN_KILOBOT)
-        //     {   distance_64_32_received = 1;
-        //         printf("***distance_64_32_received*****\r\n\n");
-        //         distance_64_32 = distance/10;
-        //         dji_hat[0] = distance_64_32;
-        //         new_message = 0;// Reset the flag
-
-
-                
-        //         // if (kilo_ticks > last_changed + 64)
-        //         // {
-        //         //     last_changed = kilo_ticks;
-        //         //     new_message = 0;// Reset the flag
-        //         //     // set_color(RGB(1, 1, 0)); // Yellow
-        //         //     // delay(100);
-        //         //     // set_color(RGB(0, 0, 0));
-        //         //     distance_64_32 = distance/10;
-        //         //     dji_hat[0] = distance_64_32;    //store the distance in the array dji_hat
-                    
-
-        //         // }
-                
-                
-        //     }
-        //     if (id_received == SECOND_KILOBOT)//if works too
-        //     {
-        //         distance_96_64_received = 1;
-        //         // if (kilo_ticks > last_changed + 64)
-        //         // {
-        //         //     last_changed = kilo_ticks;
-        //         //     new_message = 0;// Reset the flag
-        //         //     // set_color(RGB(0, 1, 0)); // Green
-        //         //     // delay(100);
-        //         //     // set_color(RGB(0, 0, 0));
-        //         //     distance_96_64 = distance/10;
-                   
-        //         // }
-        //     }
-
-        // }
-        //if (new_message == 1 && id_received == SECOND_KILOBOT && kilo_uid == ORIGIN_KILOBOT)
-        if (kilo_uid == ORIGIN_KILOBOT)
+      if (new_message == 1 && kilo_uid == ORIGIN_KILOBOT)
         {   
             if (id_received == SECOND_KILOBOT)
             {
+                dji_hat[1] = distance/10;
+                message.data[DISTANCE] = dji_hat[1]; 
+                message.crc = message_crc(&message);
                 distance_96_32_received = 1;
-                printf("****distance_96_32_received***\r\n\n");
-                
-                // distance_96_32 = distance/10;
-                // dji_hat[1] = distance_96_32;
-                // new_message = 0;// Reset the flag
-                
+                //printf("************dji_hat[1] = %d\r\n\n",dji_hat[1]);
+
                 if (kilo_ticks > last_changed + 64)
-                {
+                {   
                     last_changed = kilo_ticks;
                     new_message = 0;// Reset the flag
-                    set_color(RGB(1, 0, 0)); // Red
-                    delay(100);
-                    set_color(RGB(0, 0, 0));
-
-                    distance_96_32 = distance/10;
-                    dji_hat[1] = distance_96_32;    //store the distance in the array dji_hat
-                    message.crc = message_crc(&message);
-                    //message_to_send.data[DISTANCE_96_32] = distance_96_32;
-                    printf("origin kilobot received message from second kilobot\r\n");
-                    
                 }
             }
             if (id_received == FIRST_KILOBOT) //if works too
             {
+                dji_hat[0] = distance/10;
+                message.data[DISTANCE] = dji_hat[0]; 
+                message.crc = message_crc(&message);
                 distance_64_32_received = 1;
-                printf("***distance_64_32_received*****\r\n\n");
+                //printf("#########dji_hat[0] = %d\r\n\n",dji_hat[0]);
                 
-                // distance_64_32 = distance/10;
-                // dji_hat[0] = distance_64_32;
-                new_message = 0;// Reset the flag
                  if (kilo_ticks > last_changed + 64)
                 {
                     last_changed = kilo_ticks;
                     new_message = 0;// Reset the flag
-                    set_color(RGB(0, 0, 1)); // Blue
-                    delay(100);
-                    set_color(RGB(0, 0, 0));
-                    distance_64_32 = distance/10;
-                    dji_hat[0] = distance_64_32;    //store the distance in the array dji_hat
-                    message.crc = message_crc(&message);
-                    printf("origin kilobot received message from first kilobot\r\n");
-                   
                 }
             }
- 
         }
-        
-    /*
-phi = ((d_64_32)^2 - (d_96_64)^2 + (d_96_32)^2)/ (2* d_64_32)
-lamda = sqrt(abs((d_96_32)^2 - (phi)^2)))
-*/
-    // if (distance_64_32_received && distance_96_32_received && distance_96_64_received)
-    // {
-        distance_64_32_received = 0;
-        distance_96_32_received = 0;
-        distance_96_64_received = 0;
-        printf("*****FLAG RESET *****\r\n\n\n\n");
-        int Error_temp, delta_x, delta_y;
-        //int dEdx_temp, dEdy_temp;
-        int dEdx = 0;
-        int dEdy = 0;
+        if (distance_64_32_received && distance_96_32_received);
+        break;
+    }
+    printf("*******************both values gotten********************\r\n");
+    return dji_hat[1];
+    return dji_hat[0];
+}   
 
-         if (kilo_ticks > last_changed + 64)
-                {
-                    last_changed = kilo_ticks;
-                    new_message = 0;// Reset the flag
-                    
-                   
-                
+void multilateration()
+{
+    int i;
+    getting_dji_hat();
+    int Error_temp, delta_x, delta_y;
+    //int dEdx_temp, dEdy_temp;
+    int dEdx = 0;
+    int dEdy = 0;
 
+    for (i = 0; i < NUMBEROFSENSORS; i++)
+    {
+        dji[i] = sqrt(pow((x_coord[i] - x_origin),2) + pow((y_coord[i] - y_origin),2));
+    }
 
-        for (i = 0; i < NUMBEROFSENSORS; i++)
-        {
-            dji[i] = sqrt(pow((x_coord[i] - x_origin),2) + pow((y_coord[i] - y_origin),2));
-        }
+    for (i = 0; i < NUMBEROFSENSORS; i++)
+    {
+        Error_temp  = pow((dji[i]-dji_hat[i]),2);
+        Error = Error + Error_temp;
+    }
 
-        for (i = 0; i < NUMBEROFSENSORS; i++)
-        {
-            Error_temp  = pow((dji[i]-dji_hat[i]),2);
-            Error = Error + Error_temp;
-        }
-
-        
-        //for (i = 0; i < NUMBEROFSENSORS; i++)
-        //{
-            //dEdx_temp = (x_coord[i] - x_origin) * (1 -(dji[i]/dji_hat[i]));
-            //dEdy_temp = (y_coord[i] - y_origin) * (1 -(dji[i]/dji_hat[i]));
-            //dEdx = dEdx + dEdx_temp;
-            //dEdy = dEdy + dEdy_temp;
-        //}
-        dEdx = (x_coord[0] - x_origin) * (1 -(dji[0]/dji_hat[0])) + (x_coord[1] - x_origin) * (1 -(dji[1]/dji_hat[1]));
-        dEdy = (y_coord[0] - y_origin) * (1 -(dji[0]/dji_hat[0])) + (y_coord[1] - y_origin) * (1 -(dji[1]/dji_hat[1]));
+    dEdx = (x_coord[0] - x_origin) * (1 -(dji[0]/dji_hat[0])) + (x_coord[1] - x_origin) * (1 -(dji[1]/dji_hat[1]));
+    dEdy = (y_coord[0] - y_origin) * (1 -(dji[0]/dji_hat[0])) + (y_coord[1] - y_origin) * (1 -(dji[1]/dji_hat[1]));
     
-        delta_x = -alpha * dEdx;
-        delta_y = -alpha * dEdy;
+    delta_x = -alpha * dEdx;
+    delta_y = -alpha * dEdy;
 
-        //update coordinates for origin kilobot
-        x_origin = x_origin + round(delta_x);
-        y_origin = y_origin + round(delta_y);
-        // update coordinates for first kilobot
-        x1 = x1 + round(delta_x);
-        yy1 = yy1 + round(delta_y);
-        //update coordinates for second kilobot
-        x2 = x2 + round(delta_x);
-        y2 = y2 + round(delta_y);
+    //update coordinates for origin kilobot
+    x_origin = x_origin + round(delta_x);
+    y_origin = y_origin + round(delta_y);
+    // update coordinates for first kilobot
+    x1 = x1 + round(delta_x);
+    yy1 = yy1 + round(delta_y);
+    //update coordinates for second kilobot
+    x2 = x2 + round(delta_x);
+    y2 = y2 + round(delta_y);
 
-        message.data[X_ORIGIN] = x_origin;
-        message.data[Y_ORIGIN] = y_origin;
-        message.data[X1] = x1;
-        message.data[Y1] = yy1;
-        message.data[X2] = x2;
-        message.data[Y2] = y2;
-        message.crc = message_crc(&message);
-        //set_color(RGB(0, 0, 1)); // Blue
-        //blink_coordinates(x_origin, y_origin, x1, yy1, x2, y2);
-        //new_message = 0;
+    message.data[X_ORIGIN] = x_origin;
+    message.data[Y_ORIGIN] = y_origin;
+    message.data[X1] = x1;
+    message.data[Y1] = yy1;
+    message.data[X2] = x2;
+    message.data[Y2] = y2;
+    message.crc = message_crc(&message);
+    //set_color(RGB(0, 0, 1)); // Blue
+    blink_coordinates(x_origin, y_origin, x1, yy1, x2, y2);
+    //new_message = 0;
 
-        //DEBUGGING
-        printf("x origin = %d, y_origin = %d\r\n",x_origin, y_origin);
-        printf("x1 = %d, y1 = %d\r\n",x_coord[0], y_coord[0]);
-        printf("x2 = %d, y2 = %d\r\n",x_coord[1], y_coord[1]);
-        //printf("dEdx_temp = %d, dEdy_temp = %d\r\n",dEdx_temp,dEdy_temp);
-        //printf("kilo_uid is %d\n\r\n", kilo_uid);
-        printf("dEdx = %d, dEdy = %d\r\n", dEdx,dEdy);
-        printf("delta x = %d, delta y = %d\r\n",delta_x, delta_y);
-        printf(" distance_64_32 = %d ,distance_96_64 = %d, distance_96_32 = %d\r\n",distance_64_32,distance_96_64,distance_96_32 );
-        printf("dji[0] = %d, dji[1] = %d\r\n", dji[0],dji[1]);
-        printf("dji_hat[0] = %d, dji_hat[1] = %d\r\n", dji_hat[0],dji_hat[1]);
-    }
-    }
-    //}     
-        
+    //DEBUGGING
+    printf("x origin = %d, y_origin = %d\r\n",x_origin, y_origin);
+    printf("x1 = %d, y1 = %d\r\n",x_coord[0], y_coord[0]);
+    printf("x2 = %d, y2 = %d\r\n",x_coord[1], y_coord[1]);
+    //printf("dEdx_temp = %d, dEdy_temp = %d\r\n",dEdx_temp,dEdy_temp);
+    //printf("kilo_uid is %d\n\r\n", kilo_uid);
+    printf("dEdx = %d, dEdy = %d\r\n", dEdx,dEdy);
+    printf("delta x = %d, delta y = %d\r\n",delta_x, delta_y);
+    printf(" distance_64_32 = %d ,distance_96_64 = %d, distance_96_32 = %d\r\n",distance_64_32,distance_96_64,distance_96_32 );
+    printf("dji[0] = %d, dji[1] = %d\r\n", dji[0],dji[1]);
+    printf("dji_hat[0] = %d, dji_hat[1] = %d\r\n", dji_hat[0],dji_hat[1]);
+
 }
 
 
@@ -560,13 +477,15 @@ void message_rx(message_t *m, distance_measurement_t *d)
 
 
 void loop()
-{ 
+{ if (kilo_ticks > last_changed + 64)
+    {
     printf("******ENTERED LOOP*******\r\n\n\n\n");
-    three_way_selective_listening();
-    // for (i = 0; i < 9; i++)
-    // {
-    //     printf("message[%d] = %d\n",message.data[i]);
-    // }
+    
+    multilateration();
+    gradient_adaptive();
+    }
+    //getting_dji_hat();
+    
 }
 
 
@@ -586,9 +505,3 @@ int main()
     
     return 0;
 }
-
-
-/*
-phi = ((d_64)^2 - (d_64_96)^2 + (d_96)^2)/ (2* d_64)
-lamda = sqrt(abs((d_96)^2 - (phi)^2)))
-*/
