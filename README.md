@@ -1,7 +1,7 @@
-###OBJECTIVES
+##OBJECTIVES
 The goal of this project was to implement the algorithms in the Organizing a Global Coordinate System from Local Information on an Ad Hoc Sensor Network paper by Nagpal et al. The paper proposes using gradient descent and multilateration to create a local coordinate system
 
-##Algorithm and Setup
+###Algorithm and Setup
 I used three kilobots with Unique ID’s 32, 64 and 96 also referred to as the origin, first and second kilobot respectively. Where origin is the seed with subscript i and first and second are the sensors.
 I make use of a unit square 100mm x 100mm which  corresponds to the range of a the kilobots distance sensor. The positions of the three sensors are chosen randomly - random x and y coordinates for each- using the seeded rand_soft() function.
 The gradient descent is achieved by using the  hop count in gradient_adaptive.c file found in the kilobot labs
@@ -25,7 +25,7 @@ and
 
 ![equation] (http://latex.codecogs.com/gif.latex?%5CDelta%20y%20%3D%20-%5Calpha%20%5Cfrac%7B%5Cpartial%20E_j%7D%7B%5Cpartial%20y_j%7D)
 
-##RESULTS
+###RESULTS
 + I got the hop count working easily as the code for that already existed. I did not incorporate movement into mine so I was not able to replicate the sensors forming concentric circles around the seed
 Using the debugger I was able to confirm random coordinates were being chosen
 + I was able to get the kilobots to blink out it’s coordinates in a morse code fashion. It blinks its x cooordinates followed by threee green blinks then it’s y coordinates. It blinks red once for each ten and blue for each unit, so position (10,4) would be one red blink, three green blinks then four blue blinks.
